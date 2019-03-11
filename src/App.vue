@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    app
-    <Button type="primary">Hello world!</Button>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -19,5 +18,9 @@ export default {
 *{
   margin: 0;
   padding: 0;
+}
+html,
+body {
+  height: 100%;
 }
 </style>
