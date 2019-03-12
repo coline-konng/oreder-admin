@@ -14,49 +14,78 @@
               <Icon :type="item.icon"></Icon>
               {{item.title}}
             </template>
-            <MenuItem v-for="(subItem,subIndex) in item.options"
-            :key="subIndex"
-            :name="`${index+1}-${subIndex+1}`">{{subItem.title}}</MenuItem>
+            <MenuItem
+              v-for="(subItem,subIndex) in item.options"
+              :key="subIndex"
+              :name="`${index+1}-${subIndex+1}`"
+            >
+              <router-link :to="subItem.src" class="asideLink">{{subItem.title}}</router-link>
+            </MenuItem>
           </Submenu>
         </Menu>
       </Sider>
       <Layout>
         <Header :style="{padding: 0}" class="layout-header-bar">
-          <Icon
-            @click.native="collapsedSider"
-            :class="rotateIcon"
-            :style="{margin: '0 20px'}"
-            type="md-menu"
-            size="24"
-          ></Icon>
+          <Row type="flex" justify="space-between" align="middle">
+            <Icon
+              @click.native="collapsedSider"
+              :class="rotateIcon"
+              :style="{margin: '0 20px'}"
+              type="md-menu"
+              size="24"
+            ></Icon>
+            <div>
+              {{username}}{{identity}}
+              <a href="javascript:;" @click="handleLogout">退出</a>
+            </div>
+          </Row>
         </Header>
-        <Content :style="{margin: '20px', background: '#fff', minHeight: '260px'}">Content</Content>
+        <Content :style="{margin: '20px', background: '#fff', minHeight: '260px'}">
+          <braed-crumb></braed-crumb>
+          <router-view></router-view>
+        </Content>
       </Layout>
     </Layout>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
+import Breadcrumb from "../components/Breadcrumb";
 export default {
+  components: {
+    "braed-crumb":Breadcrumb
+  },
   data() {
     return {
       isCollapsed: false,
-      menus:[{
-          icon:'md-cart',title:'购物商城',options:[
-              {title:'商品管理',src:'#'},
-              {title:'栏目管理',src:'#'}
+      menus: [
+        {
+          icon: "md-cart",
+          title: "购物商城",
+          options: [
+            { title: "商品管理", src: "/admin/goods-list" },
+            { title: "栏目管理", src: "/admin/category-list" }
           ]
-      },{
-          icon:'ios-navigate',title:'会员管理',options:[
-              {title:'会员列表',src:'#'}
-          ]
-      },{
-          icon:'md-chatboxes',title:'商城订单',options:[
-              {title:'订单管理',src:'#'}
-          ]
-      }],
+        },
+        {
+          icon: "ios-navigate",
+          title: "会员管理",
+          options: [{ title: "会员列表", src: "/admin/account-list" }]
+        },
+        {
+          icon: "md-chatboxes",
+          title: "商城订单",
+          options: [{ title: "订单管理", src: "/admin/order-list" }]
+        }
+      ]
     };
   },
   computed: {
+    //mapState可以订阅store中数据，第一个参数user是命令空间
+    ...mapState("user", {
+      username: "username",
+      identity: "identity"
+    }),
     rotateIcon() {
       return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
     },
@@ -67,6 +96,11 @@ export default {
   methods: {
     collapsedSider() {
       this.$refs.side1.toggleCollapse();
+    },
+    handleLogout(){
+      this.$store.dispatch("user/logout",()=>{
+        this.$router.push('/login');
+      })
     }
   }
 };
@@ -126,5 +160,12 @@ export default {
   transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
   vertical-align: middle;
   font-size: 22px;
+}
+/* 设置侧边栏a标签字体颜色 */
+.asideLink {
+  color: inherit;
+}
+.ivu-layout-content{
+  background: unset !important;
 }
 </style>

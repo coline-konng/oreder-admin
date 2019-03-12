@@ -10,6 +10,10 @@ import VueRouter from "vue-router";
 // 导入组件
 import Login from './pages/Login.vue';
 import Admin from './pages/Admin.vue';
+import OrderList from './pages/order/OrderList.vue';
+import GoodsList from './pages/goods/GoodsList.vue';
+import CategoryList from './pages/category/CategoryList.vue';
+import AccountList from './pages/account/AccountList.vue';
 // 引入store
 import store from "./store";
 
@@ -35,7 +39,29 @@ const routes = [{
 }, {
     path: '/admin',
     component: Admin,
-    meta: '首页'
+    meta: '首页',
+    redirect: '/admin/goods-list',
+    children: [{
+            path: 'goods-list',
+            component: GoodsList,
+            meta: '商品管理'
+        },
+        {
+            path: 'category-list',
+            component: CategoryList,
+            meta: '栏目管理'
+        },
+        {
+            path: 'account-list',
+            component: AccountList,
+            meta: '会员订单'
+        },
+        {
+            path: 'order-list',
+            component: OrderList,
+            meta: '订单管理'
+        },
+    ]
 }];
 //创建路由对象
 const router = new VueRouter({

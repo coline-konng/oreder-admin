@@ -32,12 +32,34 @@ export default {
                         //把用户信息写入本地存储,避免刷新页面时用户信息的丢失
                         localStorage.setItem('username', message.uname);
                         localStorage.setItem('identity', message.realname);
+                        //console.log(state);
                     }
                     //resolve()中判断是否登录成功，成功返回上一页，失败提示信息
                     resolve(res.data);
                 });
             });
             return p;
+        },
+        //登出
+        logout({ state }, fn) {
+            // 调用退出的接口
+            axios({
+                url: '/admin/account/logout',
+                withCredentials: true
+            }).then((res) => {
+                //console.log(res);
+                const { status, message } = res.data;
+                if (status == 0) {
+                    //1.清空用户信息（state和本地储存中的）
+                    state.username = '';
+                    state.identity = '';
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('identity');
+                    //2.跳转到登录页
+                    fn();
+                }
+            });
+
         }
     }
 }
