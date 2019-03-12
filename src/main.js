@@ -14,6 +14,8 @@ import OrderList from './pages/order/OrderList.vue';
 import GoodsList from './pages/goods/GoodsList.vue';
 import CategoryList from './pages/category/CategoryList.vue';
 import AccountList from './pages/account/AccountList.vue';
+import OrderEdit from './pages/order/OrderEdit.vue';
+import OrderDetail from './pages/order/OrderDetail.vue';
 // 引入store
 import store from "./store";
 
@@ -60,6 +62,16 @@ const routes = [{
             path: 'order-list',
             component: OrderList,
             meta: '订单管理'
+        },
+        {
+            path: 'order-edit/:id',
+            component: OrderEdit,
+            meta: '订单编辑'
+        },
+        {
+            path: 'order-detail/:id',
+            component: OrderDetail,
+            meta: '订单详情'
         },
     ]
 }];

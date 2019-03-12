@@ -13,13 +13,18 @@
     <!-- 表格部分 -->
     <Table ref="selection" :columns="columns" :data="data" class="mt20"></Table>
     <!-- 分页器 -->
-    <Page :total="totalcount"
+    <Page
+      :total="totalcount"
       :current="pageIndex"
       :page-size-opts="[5, 10, 15, 20]"
       :page-size="pageSize"
       @on-change="handleCurrentChange"
       @on-page-size-change="handleSizeChange"
-     show-total show-sizer show-elevator class="mt20"/>
+      show-total
+      show-sizer
+      show-elevator
+      class="mt20"
+    />
   </div>
 </template>
 
@@ -97,7 +102,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.edit();
+                      this.edit(params.row);
                     }
                   }
                 },
@@ -112,7 +117,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.view();
+                      this.view(params.row);
                     }
                   }
                 },
@@ -122,16 +127,15 @@ export default {
           }
         }
       ],
-      data: [
-      ],
-      orderstatus:'',
-      vipname: '',
+      data: [],
+      orderstatus: "",
+      vipname: "",
       totalcount: 1,
       pageIndex: 1,
-      pageSize: 5,
+      pageSize: 5
     };
   },
-  mounted(){
+  mounted() {
     this.getOrdersList();
   },
   methods: {
@@ -141,7 +145,7 @@ export default {
         .get(
           `/admin/order/getorderlist?orderstatus=${this.orderstatus}
           &vipname=${this.vipname}&pageIndex=${this.pageIndex}
-          &pageSize=${this.pageSize}`            
+          &pageSize=${this.pageSize}`
         )
         .then(res => {
           //console.log(res);
@@ -154,34 +158,38 @@ export default {
         });
     },
     // 修改当前页码
-    handleCurrentChange(pageIndex){
+    handleCurrentChange(pageIndex) {
       //console.log(pageIndex);
-      this.pageIndex=pageIndex;
+      this.pageIndex = pageIndex;
       this.getOrdersList();
     },
     // 修改页容量
-    handleSizeChange(pageSize){
+    handleSizeChange(pageSize) {
       //console.log(pageSize);
-      this.pageSize=pageSize;
+      this.pageSize = pageSize;
       this.getOrdersList();
     },
     // 筛选订单状态
-    handleOrderStatus(orderstatus){
+    handleOrderStatus(orderstatus) {
       //console.log(orderstatus);
-      this.pageIndex=1;
-      this.orderstatus=orderstatus;
+      this.pageIndex = 1;
+      this.orderstatus = orderstatus;
       this.getOrdersList();
     },
     // 搜索用户名
-    handleSearch(value){
+    handleSearch(value) {
       //console.log(value);
-      this.pageIndex=1;
+      this.pageIndex = 1;
       this.getOrdersList();
     },
-    edit() {
+    edit(data) {
+      //console.log(data);
+      const { id } = data;
+      this.$router.push(`/admin/order-edit/${id}`);
     },
-    view() {
-     
+    view(data) {
+      const { id } = data;
+      this.$router.push(`/admin/order-detail/${id}`);
     }
   }
 };
