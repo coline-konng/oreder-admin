@@ -1,0 +1,101 @@
+<template>
+    <Menu
+      :active-name="activeName"
+      theme="dark"
+      width="auto"
+      :open-names="openNames"
+      :class="menuitemClasses"
+    >
+      <Submenu v-for="(item,index) in menus" :key="index" :name="`${index+1}`">
+        <template slot="title">
+          <Icon :type="item.icon"></Icon>
+          <span>{{item.title}}</span>
+        </template>
+        <MenuItem
+          v-for="(subItem,subIndex) in item.options"
+          :key="subIndex"
+          :name="`${index+1}-${subIndex+1}`"
+          v-if="!isCollapsed"
+        >
+          <router-link :to="subItem.src" class="asideLink">
+            <span>{{subItem.title}}</span>
+          </router-link>
+        </MenuItem>
+      </Submenu>
+    </Menu>
+</template>
+
+<script>
+export default {
+  props: ["isCollapsed"],
+  data() {
+    return {
+      activeName: "1-1",
+      openNames: ["1"],
+      menus: [
+        {
+          icon: "md-cart",
+          title: "购物商城",
+          options: [
+            { title: "商品管理", src: "/admin/goods-list" },
+            { title: "栏目管理", src: "/admin/category-list" }
+          ]
+        },
+        {
+          icon: "md-person",
+          title: "会员管理",
+          options: [{ title: "会员列表", src: "/admin/account-list" }]
+        },
+        {
+          icon: "ios-paper",
+          title: "商城订单",
+          options: [{ title: "订单管理", src: "/admin/order-list" }]
+        }
+      ]
+    };
+  },
+  computed: {
+    menuitemClasses() {
+      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+    }
+  }
+};
+</script>
+
+<style>
+.menu-icon {
+  transition: all 0.3s;
+}
+.rotate-icon {
+  transform: rotate(-90deg);
+}
+.menu-item span {
+  display: inline-block;
+  overflow: hidden;
+  width: 69px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  transition: width 0.2s ease 0.2s;
+}
+.menu-item i {
+  transform: translateX(0px);
+  transition: font-size 0.2s ease, transform 0.2s ease;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.collapsed-menu span {
+  width: 0px;
+  transition: width 0.2s ease;
+}
+.collapsed-menu i {
+  transform: translateX(5px);
+  transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
+  vertical-align: middle;
+  font-size: 22px;
+}
+/* 设置侧边栏a标签字体颜色 */
+.asideLink {
+  color: inherit;
+}
+</style>

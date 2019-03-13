@@ -2,44 +2,11 @@
   <div class="layout">
     <Layout>
       <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
-        <Menu
-          :active-name="activeName"
-          theme="dark"
-          width="auto"
-          :open-names="openNames"
-          :class="menuitemClasses"
-        >
-          <Submenu v-for="(item,index) in menus" :key="index" :name="`${index+1}`">
-            <template slot="title">
-              <Icon :type="item.icon"></Icon>
-              <span>{{item.title}}</span>
-            </template>
-            <MenuItem
-              v-for="(subItem,subIndex) in item.options"
-              :key="subIndex"
-              :name="`${index+1}-${subIndex+1}`"
-              v-if="!isCollapsed"
-            >
-              <router-link :to="subItem.src" class="asideLink"><span>{{subItem.title}}</span></router-link>
-            </MenuItem>
-          </Submenu>
-        </Menu>
+        <app-aside :isCollapsed="isCollapsed"></app-aside>
       </Sider>
       <Layout>
         <Header :style="{padding: 0}" class="layout-header-bar">
-          <Row type="flex" justify="space-between" align="middle">
-            <Icon
-              @click.native="collapsedSider"
-              :class="rotateIcon"
-              :style="{margin: '0 20px'}"
-              type="md-menu"
-              size="24"
-            ></Icon>
-            <div>
-              {{username}}{{identity}}
-              <a href="javascript:;" @click="handleLogout">退出</a>
-            </div>
-          </Row>
+          <app-header @collapsedSider="handleChange"></app-header>
         </Header>
         <Content :style="{margin: '20px', background: '#fff', minHeight: '260px'}">
           <braed-crumb></braed-crumb>
@@ -50,60 +17,24 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import Aside from "../components/Aside";
+import Header from "../components/Header";
 import Breadcrumb from "../components/Breadcrumb";
 export default {
   components: {
-    "braed-crumb":Breadcrumb
+    "braed-crumb": Breadcrumb,
+    "app-aside": Aside,
+    "app-header": Header
   },
   data() {
     return {
-      isCollapsed: false,
-      activeName:'1-1',
-      openNames:['1'],
-      menus: [
-        {
-          icon: "md-cart",
-          title: "购物商城",
-          options: [
-            { title: "商品管理", src: "/admin/goods-list" },
-            { title: "栏目管理", src: "/admin/category-list" }
-          ]
-        },
-        {
-          icon: "md-person",
-          title: "会员管理",
-          options: [{ title: "会员列表", src: "/admin/account-list" }]
-        },
-        {
-          icon: "ios-paper",
-          title: "商城订单",
-          options: [{ title: "订单管理", src: "/admin/order-list" }]
-        }
-      ]
+      isCollapsed: false
     };
   },
-  computed: {
-    //mapState可以订阅store中数据，第一个参数user是命令空间
-    ...mapState("user", {
-      username: "username",
-      identity: "identity"
-    }),
-    rotateIcon() {
-      return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
-    },
-    menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-    }
-  },
   methods: {
-    collapsedSider() {
-      this.$refs.side1.toggleCollapse();
-    },
-    handleLogout(){
-      this.$store.dispatch("user/logout",()=>{
-        this.$router.push('/login');
-      })
+    handleChange() {
+      //this.$refs.side1.toggleCollapse();
+      this.isCollapsed=!this.isCollapsed;
     }
   }
 };
@@ -134,7 +65,7 @@ export default {
   border-radius: 3px;
   margin: 15px auto;
 }
-.menu-icon {
+/* .menu-icon {
   transition: all 0.3s;
 }
 .rotate-icon {
@@ -164,12 +95,12 @@ export default {
   transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
   vertical-align: middle;
   font-size: 22px;
-}
+} */
 /* 设置侧边栏a标签字体颜色 */
-.asideLink {
+/* .asideLink {
   color: inherit;
-}
-.ivu-layout-content{
+}  */
+.ivu-layout-content {
   background: unset !important;
 }
 </style>
