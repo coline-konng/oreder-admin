@@ -3,23 +3,24 @@
     <Layout>
       <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
         <Menu
-          active-name="1-1"
+          :active-name="activeName"
           theme="dark"
           width="auto"
-          :open-names="['1']"
+          :open-names="openNames"
           :class="menuitemClasses"
         >
           <Submenu v-for="(item,index) in menus" :key="index" :name="`${index+1}`">
             <template slot="title">
               <Icon :type="item.icon"></Icon>
-              {{item.title}}
+              <span>{{item.title}}</span>
             </template>
             <MenuItem
               v-for="(subItem,subIndex) in item.options"
               :key="subIndex"
               :name="`${index+1}-${subIndex+1}`"
+              v-if="!isCollapsed"
             >
-              <router-link :to="subItem.src" class="asideLink">{{subItem.title}}</router-link>
+              <router-link :to="subItem.src" class="asideLink"><span>{{subItem.title}}</span></router-link>
             </MenuItem>
           </Submenu>
         </Menu>
@@ -58,6 +59,8 @@ export default {
   data() {
     return {
       isCollapsed: false,
+      activeName:'1-1',
+      openNames:['1'],
       menus: [
         {
           icon: "md-cart",
@@ -68,12 +71,12 @@ export default {
           ]
         },
         {
-          icon: "ios-navigate",
+          icon: "md-person",
           title: "会员管理",
           options: [{ title: "会员列表", src: "/admin/account-list" }]
         },
         {
-          icon: "md-chatboxes",
+          icon: "ios-paper",
           title: "商城订单",
           options: [{ title: "订单管理", src: "/admin/order-list" }]
         }
@@ -115,6 +118,7 @@ export default {
   top: 0;
   bottom: 0;
   border-radius: 4px;
+  overflow: hidden;
 }
 .ivu-layout {
   height: 100%;
